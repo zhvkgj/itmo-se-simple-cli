@@ -4,14 +4,12 @@ import ru.itmo.se.cli.command.execution.CommandExecutionException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * Класс, представляющий команду shell-a wc.
