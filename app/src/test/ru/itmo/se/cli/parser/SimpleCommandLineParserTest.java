@@ -34,16 +34,16 @@ public class SimpleCommandLineParserTest {
         Assertions.assertEquals(4, parsedResult.size());
 
         Assertions.assertEquals("echo", parsedResult.get(0).getContent());
-        Assertions.assertEquals(Token.TokenType.Command, parsedResult.get(0).getType());
+        Assertions.assertEquals(Token.Type.Command, parsedResult.get(0).getType());
 
         Assertions.assertEquals("test.txt", parsedResult.get(1).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(1).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(1).getType());
 
         Assertions.assertEquals("|", parsedResult.get(2).getContent());
-        Assertions.assertEquals(Token.TokenType.Pipe, parsedResult.get(2).getType());
+        Assertions.assertEquals(Token.Type.Pipe, parsedResult.get(2).getType());
 
         Assertions.assertEquals("cat", parsedResult.get(3).getContent());
-        Assertions.assertEquals(Token.TokenType.Command, parsedResult.get(3).getType());
+        Assertions.assertEquals(Token.Type.Command, parsedResult.get(3).getType());
     }
 
     @Test
@@ -55,19 +55,19 @@ public class SimpleCommandLineParserTest {
         Assertions.assertEquals(5, parsedResult.size(), parsedResult.toString());
 
         Assertions.assertEquals("wc", parsedResult.get(0).getContent());
-        Assertions.assertEquals(Token.TokenType.Command, parsedResult.get(0).getType());
+        Assertions.assertEquals(Token.Type.Command, parsedResult.get(0).getType());
 
         Assertions.assertEquals("-n", parsedResult.get(1).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(1).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(1).getType());
 
         Assertions.assertEquals("2", parsedResult.get(2).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(2).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(2).getType());
 
         Assertions.assertEquals("-A", parsedResult.get(3).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(3).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(3).getType());
 
         Assertions.assertEquals("fafa*", parsedResult.get(4).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(4).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(4).getType());
     }
 
     @Test
@@ -79,19 +79,19 @@ public class SimpleCommandLineParserTest {
         Assertions.assertEquals(5, parsedResult.size(), parsedResult.toString());
 
         Assertions.assertEquals("echo", parsedResult.get(0).getContent());
-        Assertions.assertEquals(Token.TokenType.Command, parsedResult.get(0).getType());
+        Assertions.assertEquals(Token.Type.Command, parsedResult.get(0).getType());
 
         Assertions.assertEquals(" | test.txt", parsedResult.get(1).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(1).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(1).getType());
 
         Assertions.assertEquals("|", parsedResult.get(2).getContent());
-        Assertions.assertEquals(Token.TokenType.Pipe, parsedResult.get(2).getType());
+        Assertions.assertEquals(Token.Type.Pipe, parsedResult.get(2).getType());
 
         Assertions.assertEquals("cat", parsedResult.get(3).getContent());
-        Assertions.assertEquals(Token.TokenType.Command, parsedResult.get(3).getType());
+        Assertions.assertEquals(Token.Type.Command, parsedResult.get(3).getType());
 
         Assertions.assertEquals(" :<( !|", parsedResult.get(4).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(4).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(4).getType());
     }
 
     @Test
@@ -104,25 +104,25 @@ public class SimpleCommandLineParserTest {
         Assertions.assertEquals(7, parsedResult.size(), parsedResult.toString());
 
         Assertions.assertEquals("ke=Hello", parsedResult.get(0).getContent());
-        Assertions.assertEquals(Token.TokenType.VarDecl, parsedResult.get(0).getType());
+        Assertions.assertEquals(Token.Type.VarDecl, parsedResult.get(0).getType());
 
         Assertions.assertEquals("|", parsedResult.get(1).getContent());
-        Assertions.assertEquals(Token.TokenType.Pipe, parsedResult.get(1).getType());
+        Assertions.assertEquals(Token.Type.Pipe, parsedResult.get(1).getType());
 
         Assertions.assertEquals("echo", parsedResult.get(2).getContent());
-        Assertions.assertEquals(Token.TokenType.Command, parsedResult.get(2).getType());
+        Assertions.assertEquals(Token.Type.Command, parsedResult.get(2).getType());
 
         Assertions.assertEquals("Hello, world! | test.txt", parsedResult.get(3).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(3).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(3).getType());
 
         Assertions.assertEquals("|", parsedResult.get(4).getContent());
-        Assertions.assertEquals(Token.TokenType.Pipe, parsedResult.get(4).getType());
+        Assertions.assertEquals(Token.Type.Pipe, parsedResult.get(4).getType());
 
         Assertions.assertEquals("cat", parsedResult.get(5).getContent());
-        Assertions.assertEquals(Token.TokenType.Command, parsedResult.get(5).getType());
+        Assertions.assertEquals(Token.Type.Command, parsedResult.get(5).getType());
 
         Assertions.assertEquals("$var :<( !|", parsedResult.get(6).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(6).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(6).getType());
     }
 
     @Test
@@ -135,22 +135,22 @@ public class SimpleCommandLineParserTest {
         Assertions.assertEquals(6, parsedResult.size(), parsedResult.toString());
 
         Assertions.assertEquals("ke=Hello", parsedResult.get(0).getContent());
-        Assertions.assertEquals(Token.TokenType.VarDecl, parsedResult.get(0).getType());
+        Assertions.assertEquals(Token.Type.VarDecl, parsedResult.get(0).getType());
 
         Assertions.assertEquals("var2=231", parsedResult.get(1).getContent());
-        Assertions.assertEquals(Token.TokenType.VarDecl, parsedResult.get(1).getType());
+        Assertions.assertEquals(Token.Type.VarDecl, parsedResult.get(1).getType());
 
         Assertions.assertEquals("_super_var34=Hello, world! | test.txt", parsedResult.get(2).getContent());
-        Assertions.assertEquals(Token.TokenType.VarDecl, parsedResult.get(2).getType());
+        Assertions.assertEquals(Token.Type.VarDecl, parsedResult.get(2).getType());
 
         Assertions.assertEquals("|", parsedResult.get(3).getContent());
-        Assertions.assertEquals(Token.TokenType.Pipe, parsedResult.get(3).getType());
+        Assertions.assertEquals(Token.Type.Pipe, parsedResult.get(3).getType());
 
         Assertions.assertEquals("cat", parsedResult.get(4).getContent());
-        Assertions.assertEquals(Token.TokenType.Command, parsedResult.get(4).getType());
+        Assertions.assertEquals(Token.Type.Command, parsedResult.get(4).getType());
 
         Assertions.assertEquals("$var :<( !|", parsedResult.get(5).getContent());
-        Assertions.assertEquals(Token.TokenType.Arg, parsedResult.get(5).getType());
+        Assertions.assertEquals(Token.Type.Arg, parsedResult.get(5).getType());
     }
 
     @Test

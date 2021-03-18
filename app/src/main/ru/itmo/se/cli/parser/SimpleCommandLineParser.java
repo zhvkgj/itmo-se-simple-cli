@@ -15,7 +15,7 @@ public class SimpleCommandLineParser implements CommandLineParser {
     private String input;
     private int beginIndex;
     private int endIndex;
-    private Token.TokenType previousTokenType;
+    private Token.Type previousType;
     private final ExpansionProvider expansionProvider;
 
     /**
@@ -34,57 +34,52 @@ public class SimpleCommandLineParser implements CommandLineParser {
     public List<Token> parse(String input) {
         this.input = input.trim();
         List<Token> tokens = new ArrayList<>();
-        previousTokenType = Token.TokenType.Pipe;
+        previousType = Token.Type.Pipe;
         Token currentToken;
         while (hasNextToken()) {
             currentToken = getToken();
-            if (previousTokenType == Token.TokenType.VarDecl && currentToken.getType() == Token.TokenType.Command)
-                tokens.add(new Token("|", Token.TokenType.Pipe));
+            if (previousType == Token.Type.VarDecl && currentToken.getType() == Token.Type.Command)
+                tokens.add(new Token("|", Token.Type.Pipe));
             tokens.add(currentToken);
-            previousTokenType = currentToken.getType();
+            previousType = currentToken.getType();
         }
         reset();
         return tokens;
     }
 
-    private Token getToken() {
+    private Token getToken() throws ParsingException {
         skipSpaces();
 
         if (isPipeChar()) {
-            return new Token("|", Token.TokenType.Pipe);
+            return new Token("|", Token.Type.Pipe);
         }
 
         var sbWithTokenContent = new StringBuilder();
         Optional<String> currentParsed;
         while (beginIndex < input.length() && input.charAt(beginIndex) != ' ' && input.charAt(beginIndex) != '|') {
-            try {
-                currentParsed = tryTokenizeNotQuoted();
-                if (currentParsed.isPresent()) {
-                    sbWithTokenContent.append(expansionProvider.expandString(currentParsed.get()));
-                    continue;
-                }
-
-                currentParsed = tryTokenizeFullQuoted();
-                if (currentParsed.isPresent()) {
-                    sbWithTokenContent.append(expansionProvider.expandString(currentParsed.get()));
-                    continue;
-                }
-
-                currentParsed = tryTokenizeWeakQuoted();
-                currentParsed.ifPresent(sbWithTokenContent::append);
-            } catch (ParsingException e) {
-                reset();
-                throw e;
+            currentParsed = tryTokenizeNotQuoted();
+            if (currentParsed.isPresent()) {
+                sbWithTokenContent.append(expansionProvider.expandString(currentParsed.get()));
+                continue;
             }
+
+            currentParsed = tryTokenizeFullQuoted();
+            if (currentParsed.isPresent()) {
+                sbWithTokenContent.append(expansionProvider.expandString(currentParsed.get()));
+                continue;
+            }
+
+            currentParsed = tryTokenizeWeakQuoted();
+            currentParsed.ifPresent(sbWithTokenContent::append);
         }
 
         String tokenContent = sbWithTokenContent.toString();
-        Token.TokenType type = Token.TokenType.Arg;
-        if (previousTokenType == Token.TokenType.Pipe || previousTokenType == Token.TokenType.VarDecl) {
+        Token.Type type = Token.Type.Arg;
+        if (previousType == Token.Type.Pipe || previousType == Token.Type.VarDecl) {
             if (tokenContent.matches(VAR_DECL_PATTERN)) {
-                type = Token.TokenType.VarDecl;
+                type = Token.Type.VarDecl;
             } else {
-                type = Token.TokenType.Command;
+                type = Token.Type.Command;
             }
         }
 
@@ -165,8 +160,10 @@ public class SimpleCommandLineParser implements CommandLineParser {
             current = input.charAt(endIndex);
             if (current == ' ' || current == '\"' || current == '\'' || current == '|')
                 break;
-            if (isForbiddenSymbol(current))
+            if (isForbiddenSymbol(current)) {
+                reset();
                 throw new ParsingException(String.format("Syntax error: unexpected token %c", current));
+            }
             endIndex++;
         }
 
@@ -187,6 +184,6 @@ public class SimpleCommandLineParser implements CommandLineParser {
         input = null;
         beginIndex = 0;
         endIndex = 0;
-        previousTokenType = Token.TokenType.Pipe;
+        previousType = Token.Type.Pipe;
     }
 }

@@ -2,7 +2,10 @@ package ru.itmo.se.cli.command;
 
 import ru.itmo.se.cli.command.execution.CommandExecutionException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedList;
@@ -46,10 +49,10 @@ public final class WcCommand extends Command {
 
         for (String filename : filenames) {
             if (!filename.contentEquals("-")) {
-                countInCurrentSource = getLineWordsBytesCountInFile(filename);
+                countInCurrentSource = getLinesWordsBytesCountInFile(filename);
             } else {
                 if (isInteractiveMode) {
-                    countInCurrentSource = getLineWordsBytesCountInUserInput();
+                    countInCurrentSource = getLinesWordsBytesCountInUserInput();
                 } else {
                     currentSourceInfo = input.readFromSource();
                     countInCurrentSource = new long[]{getCountOfLinesInString(currentSourceInfo),
@@ -68,36 +71,31 @@ public final class WcCommand extends Command {
         return 0;
     }
 
-    private long[] getLineWordsBytesCountInFile(String filename) {
+    private long[] getLinesWordsBytesCountInFile(String filename) {
         var path = Path.of(filename);
         try (var bufferedReader = Files.newBufferedReader(path)) {
-            long countOfBytes = Files.size(path);
-            long countOfLines = 0;
-            long countOfWords = 0;
-
-            String currentLine;
-            while (Objects.nonNull(currentLine = bufferedReader.readLine())) {
-                countOfLines++;
-                countOfWords += getCountOfWordsInLine(currentLine);
-            }
-
-            return new long[]{countOfLines, countOfWords, countOfBytes};
-
+            return getLinesWordsBytesCountFromSource(bufferedReader);
         } catch (IOException e) {
             throw new CommandExecutionException(
                 String.format("Wc command error: cannot read file %s", filename), e);
         }
     }
 
-    private long[] getLineWordsBytesCountInUserInput() {
+    private long[] getLinesWordsBytesCountInUserInput() {
+        try (var bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
+            return getLinesWordsBytesCountFromSource(bufferedReader);
+        } catch (IOException e) {
+            throw new CommandExecutionException(
+                "Wc command error: cannot read user input", e);
+        }
+    }
+
+    private long[] getLinesWordsBytesCountFromSource(BufferedReader reader) throws IOException {
         long countOfBytes = 0;
         long countOfLines = 0;
         long countOfWords = 0;
         String currentLine;
-
-        var scanner = new Scanner(System.in);
-        while (scanner.hasNext()) {
-            currentLine = scanner.nextLine();
+        while (Objects.nonNull(currentLine = reader.readLine())) {
             countOfLines++;
             countOfWords += getCountOfWordsInLine(currentLine);
             countOfBytes += currentLine.getBytes().length;

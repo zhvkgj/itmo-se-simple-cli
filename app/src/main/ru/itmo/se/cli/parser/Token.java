@@ -9,7 +9,7 @@ public class Token {
     /**
      * Перечисление, содержащее допустимые типы токенов.
      */
-    public enum TokenType {
+    public enum Type {
         Command("command"),
         Arg("argument"),
         VarDecl("variable declaration"),
@@ -17,7 +17,7 @@ public class Token {
 
         private final String description;
 
-        TokenType(String description) {
+        Type(String description) {
             this.description = description;
         }
 
@@ -32,7 +32,7 @@ public class Token {
     }
 
     private final String content;
-    private final TokenType type;
+    private final Type type;
 
     /**
      * Конструктор токена.
@@ -40,7 +40,7 @@ public class Token {
      * @param content строковое представление токена
      * @param type    тип токена
      */
-    public Token(String content, TokenType type) {
+    public Token(String content, Type type) {
         this.content = content;
         this.type = type;
     }
@@ -58,9 +58,9 @@ public class Token {
      * Возвращает тип токена.
      *
      * @return тип токена
-     * @see TokenType
+     * @see Type
      */
-    public TokenType getType() {
+    public Type getType() {
         return type;
     }
 }

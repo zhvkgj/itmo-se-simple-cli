@@ -26,7 +26,7 @@ public class CommandsPipelineBuilder {
         int startIdxOfCurrentCommand = 0;
         boolean isSingleCommand;
         for (int curPos = 0; curPos <= tokens.size(); curPos++) {
-            if (curPos != tokens.size() && tokens.get(curPos).getType() != Token.TokenType.Pipe) {
+            if (curPos != tokens.size() && tokens.get(curPos).getType() != Token.Type.Pipe) {
                 continue;
             }
 
@@ -56,7 +56,7 @@ public class CommandsPipelineBuilder {
     private static Command buildCommand(List<Token> tokens, boolean isFirstCommandInPipeline,
                                         boolean isSingleCommand) {
         Token firstToken = tokens.get(0);
-        if (firstToken.getType() != Token.TokenType.Command)
+        if (firstToken.getType() != Token.Type.Command)
             throw new PipelineBuildingException(String.format(
                 "Bad pipeline composition: unexpected %s token", firstToken.getType().getDescription())
             );
@@ -192,6 +192,6 @@ public class CommandsPipelineBuilder {
     }
 
     private static boolean isSequenceOfVariableDeclarations(List<Token> tokens) {
-        return tokens.stream().allMatch(token -> token.getType() == Token.TokenType.VarDecl);
+        return tokens.stream().allMatch(token -> token.getType() == Token.Type.VarDecl);
     }
 }
