@@ -45,3 +45,9 @@ tasks.compileJava {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.register("runOnGitHub") {
+    dependsOn(":check", ":test")
+    group = "custom"
+    description = "$ ./gradlew runOnGitHub # runs on GitHub Action"
+}
